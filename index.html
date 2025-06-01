@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPTIOCEANUS | Optimize the Ocean, Zero the Emissions.</title>
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>OptiOceanus</h1>
+      <p class="tagline">Optimize the Ocean, Zero the Emissions.</p>
+    </header>
+    <main class="main-layout">
+      <aside class="input-panel">
+        <form id="route-form">
+          <!-- Form labels -->
+          <div class="form-group">
+            <label>1. Enable Vessel Tracking</label>
+            <button type="button" id="gps-btn" class="gps-inactive">
+              <span id="gps-btn-text">Connect Vessel GPS</span>
+              <span
+                id="gps-btn-loading"
+                class="gps-loading"
+                style="display: none"
+              ></span>
+              <span
+                id="gps-btn-active"
+                class="gps-active-icon"
+                style="display: none"
+                >🛰️</span
+              >
+            </button>
+            <div class="status" id="gps-status-panel" style="display: none">
+              Connection Status: <span id="gps-status"></span><br />
+              Current Coordinates: <span id="gps-coord"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="port-select">2. Select Destination Port:</label>
+            <select id="port-select">
+              <option value="" selected disabled>Select Destination Port</option>
+              <option value="0">Port of Singapore</option>
+              <option value="1">Port of RottSerdam, Netherlands</option>
+              <option value="2">Port of Shanghai, China</option>
+              <option value="3">Port of Busan, South Korea</option>
+              <option value="4">Port of Los Angeles, USA</option>
+              <option value="5">Port of Jebel Ali, UAE</option>
+              <option value="6">Port of Hamburg, Germany</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="speed-slider">3. Set Cruising Speed (knots):</label>
+            <div class="speed-slider-container">
+              <input
+                type="range"
+                id="speed-slider"
+                min="1"
+                max="20"
+                value="14"
+              />
+              <div class="speed-note">
+                Optimal range: 12-16 knots for fuel efficiency
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>4. Fuel Configuration</label>
+            <div class="fuel-toggle">
+              <input
+                type="radio"
+                id="fuel-mode-lng"
+                name="fuel-mode"
+                value="LNG"
+                checked
+              />
+              <label for="fuel-mode-lng" class="fuel-label lng"
+                >LNG (Recommended)</label
+              >
+              <input
+                type="radio"
+                id="fuel-mode-lsfo"
+                name="fuel-mode"
+                value="LSFO"
+              />
+              <label for="fuel-mode-lsfo" class="fuel-label lsfo"
+                >LSFO (Traditional)</label
+              >
+            </div>
+            <div class="fuel-slider-group" id="fuel-slider-group-lng">
+              <label for="fuel-slider-lng">LNG Fuel Mix:</label>
+              <input
+                type="range"
+                id="fuel-slider-lng"
+                min="0"
+                max="100"
+                value="70"
+              />
+              <span id="fuel-slider-value-lng">70%</span>
+            </div>
+            <div
+              class="fuel-slider-group"
+              id="fuel-slider-group-lsfo"
+              style="display: none"
+            >
+              <label for="fuel-slider-lsfo">LSFO Fuel Mix:</label>
+              <input
+                type="range"
+                id="fuel-slider-lsfo"
+                min="0"
+                max="100"
+                value="70"
+              />
+              <span id="fuel-slider-value-lsfo">70%</span>
+            </div>
+            <div class="fuel-note" id="fuel-note-lng">
+              <i
+                >70% LNG mix optimizes CII compliance and reduces emissions by
+                ~23%</i
+              >
+            </div>
+            <div class="fuel-note" id="fuel-note-lsfo" style="display: none">
+              <i>Traditional fuel with higher emissions profile</i>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" id="calculate-btn">
+              Calculate Optimal Route
+            </button>
+          </div>
+        </form>
+      </aside>
+      <section class="map-panel">
+        <div id="map" class="map-placeholder">
+          <!-- Peta akan ditampilkan di sini -->
+          <ul class="map-legend">
+            <li>
+              <span class="legend blue-dot"></span> Your Vessel: Real-time
+              position
+            </li>
+            <li>
+              <span class="legend red-dot"></span> Destination: Selected port
+            </li>
+            <li>
+              <span class="legend black-line"></span> Standard Route:
+              Traditional path
+            </li>
+            <li>
+              <span class="legend green-line"></span> Optioceanus Route:
+              Optimized path
+            </li>
+            <li>
+              <span class="legend wave-icon"></span> Weather Alert: High wave
+              areas
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <section class="dashboard">
+      <h2>Voyage Optimization Dashboard</h2>
+      <!-- In the dashboard section (replace existing button) -->
+      <button
+        type="button"
+        id="back-to-map-btn"
+        class="back-to-map-btn"
+        title="Back to Map"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"
+          />
+        </svg>
+      </button>
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th>Performance Metric</th>
+            <th>Standard Route</th>
+            <th>Optioceanus Route</th>
+          </tr>
+        </thead>
+        <tbody id="dashboard-tbody">
+          <tr>
+            <td>Distance</td>
+            <td>–</td>
+            <td>–</td>
+          </tr>
+          <tr>
+            <td>CO₂e Emissions</td>
+            <td>–</td>
+            <td>–</td>
+          </tr>
+          <tr>
+            <td>Fuel Consumption (Total)</td>
+            <td>–</td>
+            <td>–</td>
+          </tr>
+          <tr>
+            <td>CII Rating</td>
+            <td>–</td>
+            <td>–</td>
+          </tr>
+          <tr>
+            <td>Average Speed</td>
+            <td id="speed-normal">–</td>
+            <td id="speed-optimal">–</td>
+          </tr>
+          <tr>
+            <td>Estimated Duration</td>
+            <td id="travel-time-normal">–</td>
+            <td id="travel-time-optimal">–</td>
+          </tr>
+          <tr>
+            <td>Significant Wave Height</td>
+            <td>–</td>
+            <td>–</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="recommendation"></div>
+    </section>
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha512-o9N1jRV6wXY0LZ6l6U+4PSJVpaz6RtZpmjHtk0N6D+PfYZ7R6pujISiF+aIu05o2NqqS1u6QwO5jMQuuXG8CZA=="
+      crossorigin=""
+    ></script>
+    <!-- Leaflet.Polyline.SnakeAnim plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-polyline-snake-anim@1.0.2/L.Polyline.SnakeAnim.min.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/ai.js"></script>
+    <script src="assets/js/map.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

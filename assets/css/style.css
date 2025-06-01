@@ -1,0 +1,834 @@
+/* ===== VARIABLES & GLOBAL STYLES ===== */
+:root {
+  /* Updated Color Palette */
+  --primary-ocean: #0c4a6e;
+  --primary-blue: #1e40af;
+  --secondary-blue: #3b82f6;
+  --accent-teal: #0d9488;
+  --accent-emerald: #10b981;
+  --danger-coral: #f97316;
+  --light-wave: #f0f9ff;
+  --dark-abyss: #082f49;
+
+  /* Typography */
+  --font-main: "Montserrat", system-ui, sans-serif;
+  --font-accent: "Playfair Display", serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.2);
+
+  /* Transitions */
+  --transition-fast: all 0.15s ease-in-out;
+  --transition-medium: all 0.3s ease-in-out;
+  --transition-slow: all 0.5s ease-in-out;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  line-height: 1.6;
+  color: var(
+    --dark-abyss
+  ); /* Updated to use a new dark color, assuming general text color */
+  background-color: var(--light-wave);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-accent);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--space-md);
+}
+
+h1 {
+  font-size: 4.5rem;
+  letter-spacing: -0.5px;
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--primary-blue);
+}
+
+/* ===== LAYOUT & STRUCTURE ===== */
+/* ===== UPDATED HEADER WITH NEW BRANDING ===== */
+header {
+  background: linear-gradient(135deg, var(--primary-ocean), var(--dark-abyss));
+  color: white;
+  padding: var(--space-lg) var(--space-xl);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  position: fixed; /* Make header fixed */
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  z-index: 1005; /* Ensure header is definitively above other content like map controls */
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;utf8,&lt;svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"&gt;&lt;path fill="rgba(255,255,255,0.05)" d="M0 0h100v100H0z"/&gt;&lt;path fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" d="M0 0l100 100M0 100l100-100"/&gt;&lt;/svg&gt;');
+  opacity: 0.5;
+}
+
+header h1 {
+  font-size: 3.5rem; /* Increased branding font size */
+  margin-bottom: var(--space-sm);
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+header .tagline {
+  font-family: var(--font-main);
+  font-weight: 300;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+  margin-top: var(--space-xs);
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  margin-top: 10.5rem; /* Adjusted for more accurate desktop header height */
+  scroll-margin-top: 10.5rem; /* For scrollIntoView to respect fixed header */
+  flex: 1;
+}
+
+@media (max-width: 1024px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-panel {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-lg);
+  height: fit-content;
+  position: sticky;
+  top: calc(
+    10.5rem + var(--space-xl)
+  ); /* Adjusted for new desktop header clearance */
+  transition: var(--transition-medium);
+}
+
+.input-panel:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+.map-panel {
+  background: white;
+  border-radius: var(--radius-xl);
+  /* overflow: hidden; Removed as it can interfere with child sticky positioning */
+  box-shadow: var(--shadow-lg);
+  scroll-margin-top: 10.5rem; /* Accommodate fixed header for desktop */
+  position: relative;
+}
+/* ===== ENHANCED DASHBOARD METRICS ===== */
+.dashboard {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  margin: 0 var(--space-xl) var(--space-xl);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-emerald));
+}
+
+.dashboard h2 {
+  color: var(--primary-ocean);
+  font-size: 2.5rem; /* Increased font size for dashboard title */
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  justify-content: center; /* Center align the title and its icon */
+}
+
+.dashboard h2::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background: url('data:image/svg+xml;utf8,&lt;svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%230d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/&gt;&lt;path d="M3.27 6.96L12 12.01l8.73-5.05"/&gt;&lt;path d="M12 22.08V12"/&gt;&lt;/svg&gt;')
+    no-repeat center;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-weight: 600;
+  font-size: 1.1rem; /* Increased font size for form labels */
+  color: var(--dark-abyss); /* Updated to use new dark variable */
+}
+
+select,
+input[type="range"] {
+  width: 100%;
+}
+
+select {
+  padding: var(--space-sm);
+  border: 1px solid var(--dark-abyss);
+  border-radius: var(--radius-md);
+  background-color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: var(--transition-fast);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--secondary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Custom styled buttons */
+button {
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-medium);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+#gps-btn {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg); /* Increased GPS button size */
+  background-color: var(--dark-abyss);
+  font-size: 1.3rem; /* Further increased font size for GPS button text and icon */
+  color: white;
+}
+
+#gps-btn.gps-inactive {
+  background-color: var(--dark-abyss);
+}
+
+#gps-btn.gps-active {
+  background-color: var(--accent-emerald);
+}
+
+#gps-btn.gps-error {
+  background-color: var(--danger-coral);  
+}
+
+/* ===== UPDATED BUTTON STYLES ===== */
+#calculate-btn {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    135deg,
+    var(--accent-teal),
+    var(--accent-emerald)
+  );
+  color: white;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(13, 148, 136, 0.3);
+}
+
+#calculate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+#calculate-btn:active {
+  transform: translateY(0);
+}
+
+/* Loading spinner */
+.gps-loading {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status panel */
+.status {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background-color: rgba(248, 250, 252, 0.8);
+  border-radius: var(--radius-sm);
+  font-size: 1.15rem; /* Further increased font size for status panel text */
+}
+
+/* ===== FUEL TOGGLE ===== */
+.fuel-toggle {
+  display: flex;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.fuel-toggle input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.fuel-label {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.fuel-label.lng {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.fuel-label.lsfo {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.fuel-toggle input[type="radio"]:checked + .fuel-label.lng {
+  background-color: #38bdf8;
+  color: white;
+  font-weight: 600;
+}
+
+.fuel-toggle input[type="radio"]:checked + .fuel-label.lsfo {
+  background-color: #f87171;
+  color: white;
+  font-weight: 600;
+}
+
+.fuel-slider-group {
+  margin-top: var(--space-md);
+}
+
+.fuel-note {
+  font-size: 0.85rem;
+  color: var(--dark-abyss);
+  margin-top: var(--space-sm);
+  font-style: italic;
+}
+
+/* ===== RANGE SLIDERS ===== */
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  margin: var(--space-sm) 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--secondary-blue);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+#speed-slider::-webkit-slider-thumb {
+  background: var(--accent-teal);
+}
+
+/* ===== MAP STYLES ===== */
+.map-placeholder {
+  /* height: 600px; Fixed height removed to allow dynamic sizing */
+  height: 100%; /* Make map placeholder fill its parent container (.map-panel) */
+  min-height: 500px; /* Optional: ensure a minimum height for the map */
+  width: 100%;
+  position: relative;
+}
+
+.map-placeholder::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  z-index: -1;
+  border-radius: var(--radius-xl);
+}
+
+.map-placeholder ul {
+  position: absolute;
+  bottom: var(--space-md);
+  left: var(--space-md);
+  background: rgba(255, 255, 255, 0.9);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  list-style: none;
+  box-shadow: var(--shadow-sm);
+  z-index: 1000;
+}
+
+.map-placeholder li {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+  font-size: 0.9rem;
+}
+
+.legend {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: var(--space-sm);
+}
+
+.blue-dot {
+  background-color: #3b82f6;
+}
+
+.red-dot {
+  background-color: #ef4444;
+}
+
+.black-line {
+  background-color: #000;
+  width: 20px;
+  height: 2px;
+  border-radius: 0;
+}
+
+.green-line {
+  background-color: #10b981;
+  width: 20px;
+  height: 2px;
+  border-radius: 0;
+}
+
+.wave-icon {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15c6.667-6 13.333 0 20-6"/></svg>')
+    no-repeat center;
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== DASHBOARD TABLE ===== */
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-lg);
+  font-size: 0.95rem;
+}
+
+.metrics-table th,
+.metrics-table td {
+  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.metrics-table th {
+  background-color: var(--primary-ocean);
+  color: white;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.metrics-table tr:last-child td {
+  border-bottom: none;
+}
+
+.metrics-table tr:hover {
+  background-color: #f8fafc; /* Updated hover color */
+}
+
+.metrics-table .delta {
+  font-weight: bold;
+}
+.metrics-table .delta.positive {
+  color: var(--accent-emerald);
+}
+.metrics-table .delta.negative {
+  color: var(--danger-coral);
+}
+.metrics-table .delta.neutral {
+  color: var(--dark-abyss); /* Or your default text color */
+}
+
+
+/* Metric value styling */
+.metric-value {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.metric-value.normal {
+  color: var(--dark-abyss);
+}
+
+.metric-value.optimal {
+  color: var(--accent-teal);
+}
+
+/* Percentage styling */
+.percentage {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.85em;
+  font-weight: 600;
+  background-color: #e0f2fe;
+  color: var(--primary-blue);
+}
+
+.percentage.improvement {
+  background-color: #dcfce7;
+  color: var(--accent-emerald);
+}
+
+.percentage.warning {
+  background-color: #fee2e2;
+  color: var(--danger-coral); /* Updated to use new danger variable */
+}
+
+/* Metric icons */
+.metric-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: var(--space-xs);
+}
+
+/* Special metric cards */
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+  margin-top: var(--space-xs);
+}
+
+.metric-card .icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--accent-emerald);
+}
+
+.metric-card .value {
+  font-weight: 700;
+  color: var(--accent-teal);
+}
+
+.metric-card .label {
+  font-size: 0.85rem;
+  color: var(--dark-abyss);
+}
+
+/* Recommendation section */
+.recommendation {
+  margin-top: var(--space-xl);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--secondary-blue);
+}
+
+.recommendation h3 {
+  color: var(--primary-ocean);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.recommendation h3::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('data:image/svg+xml;utf8,&lt;svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%231e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;circle cx="12" cy="12" r="10"/&gt;&lt;path d="M12 16v-4"/&gt;&lt;path d="M12 8h.01"/&gt;&lt;/svg&gt;')
+    no-repeat center;
+}
+
+.recommendation p {
+  line-height: 1.6;
+}
+
+.recommendation strong {
+    color: var(--primary-ocean);
+}
+.recommendation b { /* For specific bolded numbers/text in recommendation */
+    color: var(--accent-teal);
+}
+.recommendation .delta.positive { /* For coloring percentages in recommendation */
+    color: var(--accent-emerald);
+    font-weight: bold;
+}
+/* Back to Map Button */
+.back-to-map-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-medium);
+  z-index: 1000;
+}
+
+.back-to-map-btn:hover {
+  background-color: var(--primary-ocean);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.back-to-map-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ===== ANIMATIONS & MICROINTERACTIONS ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* For smoother route drawing and interactions */
+.leaflet-overlay-pane path {
+  transition: all 0.3s ease-out;
+}
+
+/* For the loading animation on routes or map elements */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+}
+
+.route-loading {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Example for CSS-driven dash animation (if you choose to use it later) */
+/* .route-animate { */
+/* stroke-dasharray: 1000; */
+/* stroke-dashoffset: 1000; */
+/* animation: dash 5s linear forwards; */
+/* } */
+
+.form-group {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.form-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.form-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.form-group:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.form-group:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.form-group:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  .main-layout {
+    padding: var(--space-md);
+    gap: var(--space-lg);
+    margin-top: 9rem; /* Adjusted for more accurate mobile header height */
+    scroll-margin-top: 9rem; /* For scrollIntoView on mobile */
+  }
+
+  .input-panel {
+    position: static;
+    /* scroll-margin-top for input-panel might be needed if it's a scroll target */
+  }
+
+  .map-placeholder {
+    height: 400px;
+  }
+
+  .map-placeholder ul {
+    position: sticky; /* Make legend sticky on mobile */
+    top: calc(
+      9rem + var(--space-sm)
+    ); /* Adjusted for new mobile header clearance + gap */
+    left: var(--space-sm);
+    /* bottom: auto; is implicit with top and sticky */
+    padding: var(--space-sm); /* Smaller padding */
+    font-size: 0.75rem; /* Smaller font size */
+    background: rgba(255, 255, 255, 0.85);
+    max-width: 160px; /* Limit width */
+    border-radius: var(--radius-sm);
+  }
+
+  .map-placeholder li {
+    font-size: inherit;
+    margin-bottom: var(--space-xs);
+  }
+
+  header h1 {
+    font-size: 2.5rem; /* Increased branding font size for mobile */
+  }
+
+  header .tagline {
+    font-size: 1.1rem;
+  }
+
+  .metrics-table {
+    font-size: 0.85rem;
+  }
+
+  .metrics-table th,
+  .metrics-table td {
+    padding: var(--space-sm);
+  }
+
+  .legend {
+    width: 10px;
+    height: 10px;
+    margin-right: var(--space-xs);
+  }
+  .black-line,
+  .green-line {
+    width: 15px;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+:focus-visible {
+  outline: 2px solid var(--secondary-blue);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

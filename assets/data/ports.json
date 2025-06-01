@@ -1,0 +1,9 @@
+[
+    {"name": "Port of Singapore", "lat": 1.2646, "lon": 103.8226, "hasLNGBunkering": true},
+    {"name": "Port of Rotterdam, Netherlands", "lat": 51.9478, "lon": 4.1415, "hasLNGBunkering": true},
+    {"name": "Port of Shanghai, China", "lat": 30.6267, "lon": 122.0647, "hasLNGBunkering": false},
+    {"name": "Port of Busan, South Korea", "lat": 35.0977, "lon": 129.0310, "hasLNGBunkering": false},
+    {"name": "Port of Los Angeles, USA", "lat": 33.7292, "lon": -118.2620, "hasLNGBunkering": false},
+    {"name": "Port of Jebel Ali, UAE", "lat": 24.9965, "lon": 55.0592, "hasLNGBunkering": false},
+    {"name": "Port of Hamburg, Germany", "lat": 53.5177, "lon": 9.9486, "hasLNGBunkering": false}
+]
